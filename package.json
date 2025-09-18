@@ -15,11 +15,7 @@
     "ai": "^4.0.25",
     "openai": "^4.68.4",
     "jotai": "^2.10.5",
-    "lucide-react": "^0.468.0",
-    "@radix-ui/react-button": "^1.1.1",
-    "@radix-ui/react-textarea": "^1.1.0",
-    "@radix-ui/react-scroll-area": "^1.2.1",
-    "@radix-ui/react-separator": "^1.1.0"
+    "lucide-react": "^0.468.0"
   },
   "devDependencies": {
     "typescript": "^5",
