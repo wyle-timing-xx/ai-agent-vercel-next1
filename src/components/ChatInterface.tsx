@@ -1,16 +1,19 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { useChat } from 'ai/react';
-import { Send, Trash2, Bot, User } from 'lucide-react';
-import { messagesAtom, inputAtom, isLoadingAtom, clearChatAtom } from '@/store/atoms';
+import { Send, Trash2, Bot, User, Settings } from 'lucide-react';
+import { messagesAtom, inputAtom, isLoadingAtom, clearChatAtom, agentPersonalityAtom } from '@/store/atoms';
+import SettingsPanel from './SettingsPanel';
 
 export default function ChatInterface() {
   const [messages, setMessages] = useAtom(messagesAtom);
   const [input, setInput] = useAtom(inputAtom);
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
   const [, clearChat] = useAtom(clearChatAtom);
+  const [agentPersonality] = useAtom(agentPersonalityAtom);
+  const [showSettings, setShowSettings] = useState(false);
 
   const {
     messages: chatMessages,
@@ -55,24 +58,61 @@ export default function ChatInterface() {
       <div className="flex items-center justify-between mb-6 pb-4 border-b">
         <div className="flex items-center space-x-2">
           <Bot className="h-8 w-8 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-800">AI Assistant</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">{agentPersonality.name}</h1>
+            <p className="text-sm text-gray-600">{agentPersonality.role}</p>
+          </div>
         </div>
-        <button
-          onClick={handleClearChat}
-          className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-        >
-          <Trash2 className="h-4 w-4" />
-          <span>Clear Chat</span>
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setShowSettings(true)}
+            className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+          >
+            <Settings className="h-4 w-4" />
+            <span>Settings</span>
+          </button>
+          <button
+            onClick={handleClearChat}
+            className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <Trash2 className="h-4 w-4" />
+            <span>Clear Chat</span>
+          </button>
+        </div>
       </div>
+
+      {/* Agent Traits */}
+      {agentPersonality.traits.length > 0 && (
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-2">
+            {agentPersonality.traits.map((trait, index) => (
+              <span
+                key={index}
+                className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+              >
+                {trait}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 mb-4">
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 mt-20">
             <Bot className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium mb-2">Welcome to AI Assistant</h3>
-            <p>Start a conversation by typing a message below.</p>
+            <h3 className="text-lg font-medium mb-2">Welcome to {agentPersonality.name}</h3>
+            <p>I'm your {agentPersonality.role}. Start a conversation by typing a message below.</p>
+            <div className="mt-4 text-sm text-gray-400">
+              <p>Try asking me about:</p>
+              <ul className="mt-2 space-y-1">
+                <li>• General questions and explanations</li>
+                <li>• Code help and programming guidance</li>
+                <li>• Creative writing and brainstorming</li>
+                <li>• Problem-solving assistance</li>
+              </ul>
+            </div>
           </div>
         ) : (
           messages.map((message, index) => (
@@ -140,6 +180,9 @@ export default function ChatInterface() {
           <Send className="h-4 w-4" />
         </button>
       </form>
+
+      {/* Settings Panel */}
+      <SettingsPanel isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   );
 }
