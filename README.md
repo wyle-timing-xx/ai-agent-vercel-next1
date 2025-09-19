@@ -1,325 +1,209 @@
-# AI Agent - Vercel AI SDK + Jotai
+# AI Agent Vercel Next1 🤖
 
-A modern AI chatbot application built with Next.js 15, Vercel AI SDK, and Jotai for state management.
+一个现代化的 AI 聊天应用，集成了 OpenAI GPT 和 Supabase 数据库，部署在 Vercel 平台上。
 
-## Features
+## ✨ 功能特性
 
-- 🤖 **AI Chat Interface**: Interactive chat with OpenAI's GPT models
-- 🧠 **State Management**: Powered by Jotai for reactive state management
-- ⚡ **Streaming Responses**: Real-time streaming of AI responses using Vercel AI SDK
-- 🎛️ **Customizable Settings**: Adjust model parameters, temperature, and agent personality
-- 🎨 **Modern UI**: Clean, responsive design with Tailwind CSS
-- 🚀 **Next.js 15**: Built on the latest Next.js with App Router
-- 📱 **Mobile Responsive**: Optimized for all device sizes
+- 🤖 **AI 智能对话** - 基于 OpenAI GPT 的智能聊天系统
+- 💾 **Supabase 数据库** - 完整的数据库连接和 CRUD 操作
+- 🔧 **连接验证** - 可视化的数据库连接测试界面
+- 🎨 **现代化 UI** - 使用 Tailwind CSS 和 shadcn/ui 组件
+- 🚀 **Vercel 部署** - 优化的生产环境部署
+- 📱 **响应式设计** - 完美适配移动端和桌面端
 
-## Tech Stack
+## 🛠 技术栈
 
 - **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS 4
+- **Styling**: Tailwind CSS, Radix UI, Lucide Icons
+- **AI**: OpenAI API, Vercel AI SDK
+- **Database**: Supabase (PostgreSQL)
 - **State Management**: Jotai
-- **AI Integration**: Vercel AI SDK, OpenAI
-- **Icons**: Lucide React
-- **Package Manager**: PNPM (recommended)
-- **Development**: Turbopack, ESLint
+- **Deployment**: Vercel
 
-## Prerequisites
+## 🚀 快速开始
 
-Before running this project, make sure you have:
-
-- **Node.js** version 18.0 or higher ([Download here](https://nodejs.org/))
-- **Package Manager**: PNPM (recommended), npm, or yarn
-- **OpenAI API Key** ([Get it here](https://platform.openai.com/api-keys))
-
-### Installing PNPM (Recommended)
-
-If you don't have PNPM installed:
-
-```bash
-npm install -g pnpm
-```
-
-Or using curl:
-```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
-```
-
-## Getting Started
-
-### Step 1: Clone the Repository
+### 1. 克隆项目
 
 ```bash
 git clone https://github.com/wyle-timing-xx/ai-agent-vercel-next1.git
 cd ai-agent-vercel-next1
 ```
 
-### Step 2: Install Dependencies
-
-Choose one of the following commands:
+### 2. 安装依赖
 
 ```bash
-# Using PNPM (recommended)
-pnpm install
-
-# Using npm
 npm install
-
-# Using yarn
+# 或
 yarn install
+# 或
+pnpm install
 ```
 
-### Step 3: Configure Environment Variables
+### 3. 环境配置
 
-1. **Copy the environment template:**
-   ```bash
-   cp .env.example .env.local
-   ```
-
-2. **Edit `.env.local` file:**
-   ```bash
-   # Open with your preferred editor
-   nano .env.local
-   # or
-   code .env.local
-   # or
-   vim .env.local
-   ```
-
-3. **Add your OpenAI API key:**
-   ```env
-   # Required: OpenAI API Configuration
-   OPENAI_API_KEY=sk-your-actual-openai-api-key-here
-   
-   # Optional: Vercel AI SDK Configuration
-   # AI_SDK_LOG_LEVEL=info
-   ```
-
-   **⚠️ Important:** 
-   - Replace `sk-your-actual-openai-api-key-here` with your actual OpenAI API key
-   - Never commit your `.env.local` file to version control
-   - The key should start with `sk-` followed by a long string
-
-### Step 4: Run the Development Server
+复制环境变量模板：
 
 ```bash
-# Using PNPM (recommended)
-pnpm dev
+cp .env.example .env.local
+```
 
-# Using npm
+编辑 `.env.local` 文件，添加您的 API 密钥：
+
+```env
+# OpenAI API Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Optional: Vercel AI SDK Configuration
+# AI_SDK_LOG_LEVEL=info
+```
+
+### 4. 数据库设置
+
+1. 在 [Supabase](https://supabase.com) 创建新项目
+2. 进入 SQL Editor
+3. 执行 `database/setup.sql` 中的 SQL 脚本
+
+### 5. 启动开发服务器
+
+```bash
 npm run dev
-
-# Using yarn
-yarn dev
 ```
 
-### Step 5: Open in Browser
+访问 [http://localhost:3000](http://localhost:3000) 查看应用。
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+## 📖 使用指南
 
-You should see the AI Assistant interface ready to use!
+### Supabase 连接测试
 
-## 🔑 Getting Your OpenAI API Key
+访问 `/test-supabase` 页面来：
 
-1. Go to [OpenAI Platform](https://platform.openai.com/)
-2. Sign in or create an account
-3. Navigate to [API Keys](https://platform.openai.com/api-keys)
-4. Click "Create new secret key"
-5. Copy the key and paste it in your `.env.local` file
+- ✅ 验证数据库连接状态
+- 🔄 测试 CRUD 操作
+- 🧹 清理测试数据
+- 📊 查看详细的连接报告
 
-**Note:** OpenAI API usage is pay-per-use. Make sure you have billing set up in your OpenAI account.
+### AI 聊天功能
 
-## Project Structure
+访问 `/chat` 页面开始与 AI 对话：
+
+- 💬 支持多轮对话
+- 🧠 上下文理解
+- ⚡ 实时流式响应
+- 📝 对话历史记录
+
+## 🏗 项目结构
 
 ```
-ai-agent-vercel-next1/
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   └── chat/
-│   │   │       └── route.ts      # AI chat API endpoint
-│   │   ├── favicon.ico
-│   │   ├── globals.css           # Global styles
-│   │   ├── layout.tsx            # Root layout with Jotai Provider
-│   │   └── page.tsx              # Home page
-│   ├── components/
-│   │   ├── ChatInterface.tsx     # Main chat interface
-│   │   └── SettingsPanel.tsx     # Settings configuration panel
-│   └── store/
-│       └── atoms.ts              # Jotai state atoms
-├── .env.example                  # Environment variables template
-├── .env.local                    # Your environment variables (create this)
-├── .gitignore
-├── next.config.ts                # Next.js configuration
-├── package.json                  # Dependencies and scripts
-├── pnpm-lock.yaml               # PNPM lock file
-├── postcss.config.mjs           # PostCSS configuration
-├── tailwind.config.ts           # Tailwind CSS configuration
-├── tsconfig.json                # TypeScript configuration
-└── README.md
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API 路由
+│   │   └── test-supabase/ # Supabase 测试 API
+│   ├── test-supabase/     # 数据库测试页面
+│   └── page.tsx           # 主页
+├── components/            # React 组件
+│   └── ui/               # UI 组件库
+├── lib/                  # 工具库
+│   ├── supabase.ts       # Supabase 客户端配置
+│   └── utils.ts          # 工具函数
+└── store/                # 状态管理
+database/
+└── setup.sql             # 数据库初始化脚本
 ```
 
-## Available Scripts
+## 🔧 配置说明
 
-```bash
-# Development server with Turbopack
-pnpm dev
+### OpenAI API
 
-# Build for production
-pnpm build
+1. 访问 [OpenAI Platform](https://platform.openai.com)
+2. 创建 API Key
+3. 将 Key 添加到 `OPENAI_API_KEY` 环境变量
 
-# Start production server
-pnpm start
+### Supabase 配置
 
-# Run linting
-pnpm lint
-```
+1. 在 [Supabase Dashboard](https://app.supabase.com) 创建项目
+2. 获取项目 URL 和 API Keys：
+   - `NEXT_PUBLIC_SUPABASE_URL`: 项目 URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: 匿名密钥
+   - `SUPABASE_SERVICE_ROLE_KEY`: 服务角色密钥（可选，用于管理员操作）
 
-## Usage Guide
+## 🚀 部署
 
-### Basic Chat
+### Vercel 部署
 
-1. Start typing in the message input at the bottom
-2. Press Enter or click the Send button (📤)
-3. Watch as the AI responds in real-time with streaming
-4. Continue the conversation naturally
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wyle-timing-xx/ai-agent-vercel-next1)
 
-### Customizing Settings
+1. Fork 此仓库
+2. 在 Vercel 中导入项目
+3. 添加环境变量
+4. 部署完成
 
-1. Click the "Settings" button in the header
-2. Adjust the following options:
-   - **Model**: Choose between GPT-3.5 Turbo, GPT-4, or GPT-4 Turbo
-   - **Temperature**: Control response creativity (0 = conservative, 1 = creative)
-   - **Max Tokens**: Set the maximum response length (100-4000)
-   - **Agent Name**: Customize the AI assistant's name
-   - **Agent Role**: Define the assistant's role/persona
-   - **Traits**: Add personality traits (comma-separated)
-3. Click "Save Settings" to apply changes
+### 环境变量设置
 
-### Clearing Chat
+在 Vercel 项目设置中添加：
 
-Click the "Clear Chat" button (🗑️) in the header to start a fresh conversation.
+- `OPENAI_API_KEY`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
 
-## Troubleshooting
+## 🔍 故障排除
 
-### Common Issues
+### 常见问题
 
-**1. "OpenAI API key not found" error:**
-- Make sure you've created the `.env.local` file
-- Verify your API key is correctly set in the file
-- Restart the development server after adding the key
+**1. Supabase 连接失败**
+- 检查环境变量是否正确配置
+- 验证 Supabase 项目状态
+- 确认网络连接
 
-**2. Dependencies installation fails:**
-- Try deleting `node_modules` and `pnpm-lock.yaml`
-- Run `pnpm install` again
-- Make sure you have Node.js 18+ installed
+**2. OpenAI API 错误**
+- 验证 API Key 是否有效
+- 检查账户余额
+- 确认 API 使用限制
 
-**3. Port 3000 already in use:**
-- The server will automatically try the next available port
-- Or specify a custom port: `pnpm dev -- --port 3001`
+**3. 构建错误**
+- 清除 `.next` 缓存：`rm -rf .next`
+- 重新安装依赖：`rm -rf node_modules && npm install`
 
-**4. Build fails:**
-- Run `pnpm lint` to check for code issues
-- Make sure all TypeScript errors are resolved
-- Verify all environment variables are set
+### 调试技巧
 
-### Performance Tips
+- 查看浏览器控制台错误
+- 检查 Vercel 部署日志
+- 使用 Supabase Dashboard 查看数据库日志
 
-- Use **GPT-3.5 Turbo** for faster responses and lower costs
-- Adjust **Max Tokens** to control response length and cost
-- Lower **Temperature** for more consistent responses
+## 📚 文档
 
-## Deployment
+- [Next.js 文档](https://nextjs.org/docs)
+- [Supabase 文档](https://supabase.com/docs)
+- [OpenAI API 文档](https://platform.openai.com/docs)
+- [Vercel AI SDK 文档](https://sdk.vercel.ai/docs)
 
-### Deploy to Vercel (Recommended)
+## 🤝 贡献
 
-1. **Push your code to GitHub** (if not already done)
+欢迎提交 Issue 和 Pull Request！
 
-2. **Connect to Vercel:**
-   - Go to [vercel.com](https://vercel.com)
-   - Click "New Project"
-   - Import your GitHub repository
-   - Vercel will automatically detect it's a Next.js project
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
 
-3. **Configure Environment Variables:**
-   - In Vercel dashboard, go to your project settings
-   - Navigate to "Environment Variables"
-   - Add: `OPENAI_API_KEY` with your OpenAI API key
-   - Set for all environments (Production, Preview, Development)
+## 📄 许可证
 
-4. **Deploy:**
-   - Click "Deploy"
-   - Your app will be available at `https://your-project.vercel.app`
+本项目采用 MIT 许可证。查看 [LICENSE](LICENSE) 文件了解更多信息。
 
-### Deploy to Other Platforms
+## 🙏 致谢
 
-The app can be deployed to any platform that supports Next.js:
-- **Netlify**: Use `npm run build` and deploy the `.next` folder
-- **Railway**: Connect your GitHub repo and set environment variables
-- **Digital Ocean**: Use their App Platform with Node.js
-- **AWS/Google Cloud**: Use their respective hosting services
-
-**Remember to set the `OPENAI_API_KEY` environment variable on your deployment platform.**
-
-## State Management with Jotai
-
-The app uses Jotai atoms for state management:
-
-- `messagesAtom`: Stores chat messages
-- `inputAtom`: Current input value  
-- `isLoadingAtom`: Loading state
-- `chatConfigAtom`: Chat configuration (model, temperature, etc.)
-- `agentPersonalityAtom`: Agent personality settings
-- `clearChatAtom`: Action to clear chat history
-
-### Benefits of Jotai
-
-- **Atomic**: Bottom-up approach to state management
-- **Reactive**: Components automatically re-render on state changes  
-- **TypeScript**: Full TypeScript support
-- **Performance**: Only re-renders components that use changed atoms
-- **Simple**: Minimal boilerplate compared to other state management solutions
-
-## API Costs
-
-Be aware that using OpenAI's API incurs costs:
-- **GPT-3.5 Turbo**: ~$0.0015 per 1K tokens
-- **GPT-4**: ~$0.03 per 1K tokens  
-- **GPT-4 Turbo**: ~$0.01 per 1K tokens
-
-Monitor your usage in the [OpenAI Dashboard](https://platform.openai.com/usage).
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes
-4. Run tests: `pnpm lint`
-5. Commit: `git commit -am 'Add some feature'`
-6. Push: `git push origin feature-name`
-7. Create a Pull Request
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Support
-
-If you encounter any issues:
-
-1. Check this README for common solutions
-2. Look through [GitHub Issues](https://github.com/wyle-timing-xx/ai-agent-vercel-next1/issues)
-3. Create a new issue with:
-   - Your Node.js version (`node --version`)
-   - Package manager and version (`pnpm --version`)
-   - Error messages (if any)
-   - Steps to reproduce the issue
-
-## Acknowledgments
-
-- Built with [Vercel AI SDK](https://sdk.vercel.ai/)
-- State management by [Jotai](https://jotai.org/)
-- Powered by [Next.js](https://nextjs.org/)
-- UI components from [Lucide React](https://lucide.dev/)
+- [Vercel](https://vercel.com) - 部署平台
+- [Supabase](https://supabase.com) - 数据库服务
+- [OpenAI](https://openai.com) - AI 模型
+- [Tailwind CSS](https://tailwindcss.com) - CSS 框架
+- [Radix UI](https://radix-ui.com) - 无障碍组件
 
 ---
 
-⭐ **Star this repo if you found it helpful!**
+**⭐ 如果这个项目对您有帮助，请点个 Star！**
