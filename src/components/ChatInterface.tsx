@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { useChat } from '@ai-sdk/react';
 import { Send, Trash2, Bot, User, Settings } from 'lucide-react';
-import { messagesAtom, inputAtom, isLoadingAtom, clearChatAtom, agentPersonalityAtom } from '@/store/atoms';
+import { messagesAtom, inputAtom, isLoadingAtom, clearChatAtom, agentPersonalityAtom, CompatibleMessage } from '@/store/atoms';
 import SettingsPanel from './SettingsPanel';
 
 export default function ChatInterface() {
@@ -37,9 +37,22 @@ export default function ChatInterface() {
     },
   });
 
+  // Convert UIMessage to CompatibleMessage for consistency
+  const convertMessages = (uiMessages: any[]): CompatibleMessage[] => {
+    return uiMessages.map((msg) => ({
+      id: msg.id || '',
+      role: msg.role,
+      content: msg.content || '',
+      parts: msg.parts,
+      status: msg.status,
+      metadata: msg.metadata,
+    }));
+  };
+
   // Sync chat messages with Jotai state
   React.useEffect(() => {
-    setMessages(chatMessages);
+    const convertedMessages = convertMessages(chatMessages);
+    setMessages(convertedMessages);
   }, [chatMessages, setMessages]);
 
   // Sync loading state based on status
@@ -88,6 +101,34 @@ export default function ChatInterface() {
 
   // Check if currently loading
   const currentlyLoading = status === 'streaming' || status === 'submitted';
+
+  // Helper function to render message content safely
+  const renderMessageContent = (message: CompatibleMessage) => {
+    // Try to render parts first (new SDK format)
+    if (message.parts && Array.isArray(message.parts) && message.parts.length > 0) {
+      return message.parts.map((part, partIndex) => {
+        // Handle different part types safely
+        if (typeof part === 'object' && part !== null) {
+          // Check for text property
+          if ('text' in part && typeof part.text === 'string') {
+            return <span key={partIndex}>{part.text}</span>;
+          }
+          // Check for content property as fallback
+          if ('content' in part && typeof part.content === 'string') {
+            return <span key={partIndex}>{part.content}</span>;
+          }
+        }
+        // Fallback for string parts
+        if (typeof part === 'string') {
+          return <span key={partIndex}>{part}</span>;
+        }
+        return null;
+      });
+    }
+    
+    // Fallback to content property (backward compatibility)
+    return message.content || '';
+  };
 
   return (
     <div className="flex flex-col h-screen max-w-4xl mx-auto p-4">
@@ -196,15 +237,7 @@ export default function ChatInterface() {
                 }`}
               >
                 <div className="whitespace-pre-wrap">
-                  {/* Render message parts for new SDK */}
-                  {message.parts ? (
-                    message.parts.map((part, partIndex) => (
-                      <span key={partIndex}>{part.text}</span>
-                    ))
-                  ) : (
-                    /* Fallback for content property */
-                    message.content
-                  )}
+                  {renderMessageContent(message)}
                 </div>
                 {/* Show status for assistant messages */}
                 {message.role === 'assistant' && message.status === 'streaming' && (
