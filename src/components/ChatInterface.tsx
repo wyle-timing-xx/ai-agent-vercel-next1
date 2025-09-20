@@ -79,7 +79,11 @@ export default function ChatInterface() {
     setIsLoading(true);
 
     try {
-      sendMessage(messageContent);
+      // Use the correct message format for AI SDK 5.0
+      await sendMessage({
+        role: 'user',
+        content: messageContent,
+      });
     } catch (error) {
       console.error('Error sending message:', error);
       setIsLoading(false);
