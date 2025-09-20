@@ -15,35 +15,38 @@ export default function ChatInterface() {
   const [agentPersonality] = useAtom(agentPersonalityAtom);
   const [showSettings, setShowSettings] = useState(false);
 
+  // Local input state since useChat no longer manages it
+  const [localInput, setLocalInput] = useState('');
+
   const {
     messages: chatMessages,
-    append,
-    reload,
+    sendMessage,
     stop,
-    isLoading: chatIsLoading,
+    regenerate,
+    status,
+    error,
     setMessages: setChatMessages,
   } = useChat({
     api: '/api/chat',
-    onResponse: async (response) => {
-      setIsLoading(true);
-    },
-    onFinish: (message) => {
+    onFinish: (options) => {
       setIsLoading(false);
     },
+    onError: (error) => {
+      setIsLoading(false);
+      console.error('Chat error:', error);
+    },
   });
-
-  // Local input state
-  const [localInput, setLocalInput] = useState('');
 
   // Sync chat messages with Jotai state
   React.useEffect(() => {
     setMessages(chatMessages);
   }, [chatMessages, setMessages]);
 
-  // Sync loading state
+  // Sync loading state based on status
   React.useEffect(() => {
-    setIsLoading(chatIsLoading);
-  }, [chatIsLoading, setIsLoading]);
+    const loading = status === 'streaming' || status === 'submitted';
+    setIsLoading(loading);
+  }, [status, setIsLoading]);
 
   // Sync input with Jotai state
   React.useEffect(() => {
@@ -56,18 +59,17 @@ export default function ChatInterface() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!localInput.trim() || isLoading) return;
+    if (!localInput.trim() || status === 'streaming' || status === 'submitted') return;
 
-    const userMessage = {
-      role: 'user' as const,
-      content: localInput.trim(),
-    };
+    const messageContent = localInput.trim();
+    setLocalInput(''); // Clear input immediately for better UX
+    setIsLoading(true);
 
     try {
-      await append(userMessage);
-      setLocalInput('');
+      sendMessage(messageContent);
     } catch (error) {
       console.error('Error sending message:', error);
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +77,17 @@ export default function ChatInterface() {
     clearChat();
     setChatMessages([]);
     setLocalInput('');
+    stop(); // Stop any ongoing generation
   };
+
+  const handleRegenerate = () => {
+    if (chatMessages.length > 0) {
+      regenerate();
+    }
+  };
+
+  // Check if currently loading
+  const currentlyLoading = status === 'streaming' || status === 'submitted';
 
   return (
     <div className="flex flex-col h-screen max-w-4xl mx-auto p-4">
@@ -96,6 +108,15 @@ export default function ChatInterface() {
             <Settings className="h-4 w-4" />
             <span>Settings</span>
           </button>
+          {chatMessages.length > 0 && (
+            <button
+              onClick={handleRegenerate}
+              disabled={currentlyLoading}
+              className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50"
+            >
+              <span>Regenerate</span>
+            </button>
+          )}
           <button
             onClick={handleClearChat}
             className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -122,6 +143,13 @@ export default function ChatInterface() {
         </div>
       )}
 
+      {/* Error Display */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-600 text-sm">Error: {error.message}</p>
+        </div>
+      )}
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 mb-4">
         {messages.length === 0 ? (
@@ -140,9 +168,9 @@ export default function ChatInterface() {
             </div>
           </div>
         ) : (
-          messages.map((message, index) => (
+          messages.map((message) => (
             <div
-              key={message.id || index}
+              key={message.id}
               className={`flex items-start space-x-3 ${
                 message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
               }`}
@@ -167,12 +195,28 @@ export default function ChatInterface() {
                     : 'bg-gray-100 text-gray-800 mr-12'
                 }`}
               >
-                <div className="whitespace-pre-wrap">{message.content}</div>
+                <div className="whitespace-pre-wrap">
+                  {/* Render message parts for new SDK */}
+                  {message.parts ? (
+                    message.parts.map((part, partIndex) => (
+                      <span key={partIndex}>{part.text}</span>
+                    ))
+                  ) : (
+                    /* Fallback for content property */
+                    message.content
+                  )}
+                </div>
+                {/* Show status for assistant messages */}
+                {message.role === 'assistant' && message.status === 'streaming' && (
+                  <div className="mt-2 text-xs opacity-60">Typing...</div>
+                )}
               </div>
             </div>
           ))
         )}
-        {isLoading && (
+        
+        {/* Loading indicator */}
+        {currentlyLoading && (
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center">
               <Bot className="h-4 w-4" />
@@ -194,16 +238,25 @@ export default function ChatInterface() {
           value={localInput}
           onChange={handleInputChange}
           placeholder="Type your message..."
-          disabled={isLoading}
+          disabled={currentlyLoading}
           className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
         />
         <button
           type="submit"
-          disabled={isLoading || !localInput.trim()}
+          disabled={currentlyLoading || !localInput.trim()}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           <Send className="h-4 w-4" />
         </button>
+        {currentlyLoading && (
+          <button
+            type="button"
+            onClick={stop}
+            className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+          >
+            Stop
+          </button>
+        )}
       </form>
 
       {/* Settings Panel */}
