@@ -17,9 +17,9 @@ export default function ChatInterface() {
 
   const {
     messages: chatMessages,
-    input: chatInput,
-    handleInputChange,
-    handleSubmit,
+    append,
+    reload,
+    stop,
     isLoading: chatIsLoading,
     setMessages: setChatMessages,
   } = useChat({
@@ -31,6 +31,9 @@ export default function ChatInterface() {
       setIsLoading(false);
     },
   });
+
+  // Local input state
+  const [localInput, setLocalInput] = useState('');
 
   // Sync chat messages with Jotai state
   React.useEffect(() => {
@@ -44,12 +47,34 @@ export default function ChatInterface() {
 
   // Sync input with Jotai state
   React.useEffect(() => {
-    setInput(chatInput);
-  }, [chatInput, setInput]);
+    setInput(localInput);
+  }, [localInput, setInput]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalInput(e.target.value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!localInput.trim() || isLoading) return;
+
+    const userMessage = {
+      role: 'user' as const,
+      content: localInput.trim(),
+    };
+
+    try {
+      await append(userMessage);
+      setLocalInput('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
 
   const handleClearChat = () => {
     clearChat();
     setChatMessages([]);
+    setLocalInput('');
   };
 
   return (
@@ -117,7 +142,7 @@ export default function ChatInterface() {
         ) : (
           messages.map((message, index) => (
             <div
-              key={index}
+              key={message.id || index}
               className={`flex items-start space-x-3 ${
                 message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
               }`}
@@ -166,7 +191,7 @@ export default function ChatInterface() {
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="flex space-x-2">
         <input
-          value={chatInput}
+          value={localInput}
           onChange={handleInputChange}
           placeholder="Type your message..."
           disabled={isLoading}
@@ -174,7 +199,7 @@ export default function ChatInterface() {
         />
         <button
           type="submit"
-          disabled={isLoading || !chatInput.trim()}
+          disabled={isLoading || !localInput.trim()}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
         >
           <Send className="h-4 w-4" />
