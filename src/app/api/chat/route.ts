@@ -8,9 +8,12 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = await streamText({
-    model: openai('gpt-3.5-turbo'),
+    model: openai('deepseek-chat', {
+      baseURL: 'https://api.deepseek.com/v1',
+      apiKey: process.env.DEEPSEEK_API_KEY,
+    }),
     messages,
-    system: `You are a helpful AI assistant. You can help users with various tasks including:
+    system: `You are a helpful AI assistant powered by DeepSeek. You can help users with various tasks including:
     - Answering questions
     - Providing explanations
     - Helping with problem-solving
