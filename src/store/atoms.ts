@@ -1,8 +1,17 @@
 import { atom } from 'jotai';
-import { Message } from 'ai';
+
+// Define a compatible message type that works with both old and new SDK
+export interface CompatibleMessage {
+  id: string;
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+  parts?: Array<{ text: string }>;
+  status?: 'submitted' | 'streaming' | 'ready' | 'error';
+  metadata?: unknown;
+}
 
 // Chat messages atom
-export const messagesAtom = atom<Message[]>([]);
+export const messagesAtom = atom<CompatibleMessage[]>([]);
 
 // Input value atom
 export const inputAtom = atom<string>('');
