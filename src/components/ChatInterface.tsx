@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAtom } from 'jotai';
-import { useChat } from 'ai/react';
+import { useChat } from '@ai-sdk/react';
 import { Send, Trash2, Bot, User, Settings } from 'lucide-react';
 import { messagesAtom, inputAtom, isLoadingAtom, clearChatAtom, agentPersonalityAtom } from '@/store/atoms';
 import SettingsPanel from './SettingsPanel';
