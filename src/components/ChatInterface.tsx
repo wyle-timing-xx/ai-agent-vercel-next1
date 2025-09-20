@@ -24,10 +24,10 @@ export default function ChatInterface() {
     setMessages: setChatMessages,
   } = useChat({
     api: '/api/chat',
-    onResponse() {
+    onResponse: async (response) => {
       setIsLoading(true);
     },
-    onFinish() {
+    onFinish: (message) => {
       setIsLoading(false);
     },
   });
