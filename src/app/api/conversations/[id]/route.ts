@@ -4,10 +4,13 @@ import { chatService } from '@/lib/chat-service';
 // GET /api/conversations/[id] - 获取特定对话及其消息
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const conversationId = parseInt(params.id);
+    const paramsRes = await params;
+    const id = paramsRes.id;
+    
+    const conversationId = parseInt(id);
     
     if (isNaN(conversationId)) {
       return Response.json(
@@ -38,10 +41,13 @@ export async function GET(
 // PATCH /api/conversations/[id] - 更新对话标题
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const conversationId = parseInt(params.id);
+    const paramsRes = await params;
+    const id = paramsRes.id;
+    const conversationId = parseInt(id);
+
     const { title } = await request.json();
     
     if (isNaN(conversationId)) {
@@ -82,7 +88,7 @@ export async function PATCH(
 // PUT /api/conversations/[id] - 更新对话标题 (兼容性)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string; }>; }
 ) {
   return PATCH(request, { params });
 }
@@ -90,10 +96,13 @@ export async function PUT(
 // DELETE /api/conversations/[id] - 删除对话
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string; }>; }
 ) {
   try {
-    const conversationId = parseInt(params.id);
+    const paramsRes = await params;
+    const id = paramsRes.id;
+    
+    const conversationId = parseInt(id);
     
     if (isNaN(conversationId)) {
       return Response.json(
