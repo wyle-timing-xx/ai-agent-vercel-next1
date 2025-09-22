@@ -11,7 +11,7 @@ export async function GET(
     
     if (isNaN(conversationId)) {
       return Response.json(
-        { success: false, error: '无效的对话ID' },
+        { error: '无效的对话ID' },
         { status: 400 }
       );
     }
@@ -20,26 +20,23 @@ export async function GET(
     
     if (!conversation) {
       return Response.json(
-        { success: false, error: '对话不存在' },
+        { error: '对话不存在' },
         { status: 404 }
       );
     }
 
-    return Response.json({
-      success: true,
-      data: conversation
-    });
+    return Response.json(conversation);
   } catch (error) {
     console.error('获取对话失败:', error);
     return Response.json(
-      { success: false, error: '获取对话失败' },
+      { error: '获取对话失败' },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/conversations/[id] - 更新对话标题
-export async function PUT(
+// PATCH /api/conversations/[id] - 更新对话标题
+export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
@@ -49,14 +46,14 @@ export async function PUT(
     
     if (isNaN(conversationId)) {
       return Response.json(
-        { success: false, error: '无效的对话ID' },
+        { error: '无效的对话ID' },
         { status: 400 }
       );
     }
 
     if (!title) {
       return Response.json(
-        { success: false, error: '标题不能为空' },
+        { error: '标题不能为空' },
         { status: 400 }
       );
     }
@@ -65,22 +62,29 @@ export async function PUT(
     
     if (!success) {
       return Response.json(
-        { success: false, error: '更新对话标题失败' },
+        { error: '更新对话标题失败' },
         { status: 500 }
       );
     }
 
     return Response.json({
-      success: true,
       message: '对话标题更新成功'
     });
   } catch (error) {
     console.error('更新对话标题失败:', error);
     return Response.json(
-      { success: false, error: '更新对话标题失败' },
+      { error: '更新对话标题失败' },
       { status: 500 }
     );
   }
+}
+
+// PUT /api/conversations/[id] - 更新对话标题 (兼容性)
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  return PATCH(request, { params });
 }
 
 // DELETE /api/conversations/[id] - 删除对话
@@ -93,7 +97,7 @@ export async function DELETE(
     
     if (isNaN(conversationId)) {
       return Response.json(
-        { success: false, error: '无效的对话ID' },
+        { error: '无效的对话ID' },
         { status: 400 }
       );
     }
@@ -102,19 +106,18 @@ export async function DELETE(
     
     if (!success) {
       return Response.json(
-        { success: false, error: '删除对话失败' },
+        { error: '删除对话失败' },
         { status: 500 }
       );
     }
 
     return Response.json({
-      success: true,
       message: '对话删除成功'
     });
   } catch (error) {
     console.error('删除对话失败:', error);
     return Response.json(
-      { success: false, error: '删除对话失败' },
+      { error: '删除对话失败' },
       { status: 500 }
     );
   }
