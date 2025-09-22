@@ -20,6 +20,5 @@ export async function POST(req: Request) {
     
     Be concise, helpful, and friendly in your responses.`,
   });
-
   return result.toDataStreamResponse();
 }

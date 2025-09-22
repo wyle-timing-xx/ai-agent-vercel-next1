@@ -1,3 +1,4 @@
+import { Database } from '@/types/database'
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -27,23 +28,10 @@ export const createSupabaseServerClient = () => {
   }
 }
 
-// 数据库表类型定义
-export interface TestRecord {
-  id: number
-  name: string
-  email: string
-  created_at: string
-  updated_at: string
-}
 
-export interface Database {
-  public: {
-    Tables: {
-      test_connection: {
-        Row: TestRecord
-        Insert: Omit<TestRecord, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<TestRecord, 'id' | 'created_at' | 'updated_at'>>
-      }
-    }
-  }
-}
+
+
+// 类型别名，方便使用
+export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
+export type Inserts<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
+export type Updates<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
