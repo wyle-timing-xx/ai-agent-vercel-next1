@@ -76,21 +76,48 @@ yarn install
 
 2. **编辑 `.env.local` 文件：**
    ```bash
-   # 使用您喜欢的编辑器打开
-   nano .env.local
-   # 或者
-   code .env.local
-   # 或者
-   vim .env.local
+# OpenAI API Configuration
+DEEPSEEK_API_KEY=
+
+
+# Optional: Vercel AI SDK Configuration
+# AI_SDK_LOG_LEVEL=info
+POSTGRES_URL=
+POSTGRES_USER=
+POSTGRES_HOST=
+SUPABASE_JWT_SECRET=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+POSTGRES_PRISMA_URL=
+POSTGRES_PASSWORD=
+POSTGRES_DATABASE=
+SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+POSTGRES_URL_NON_POOLING=
    ```
 
-3. **添加您的 OpenAI API 密钥：**
+3. **添加您的密钥：**
    ```env
-   # 必需：OpenAI API 配置
-   OPENAI_API_KEY=sk-your-actual-openai-api-key-here
-   
-   # 可选：Vercel AI SDK 配置
-   # AI_SDK_LOG_LEVEL=info
+  OpenAI API Configuration
+DEEPSEEK_API_KEY=
+
+
+# Optional: Vercel AI SDK Configuration
+# AI_SDK_LOG_LEVEL=info
+POSTGRES_URL=
+POSTGRES_USER=
+POSTGRES_HOST=
+SUPABASE_JWT_SECRET=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+POSTGRES_PRISMA_URL=
+POSTGRES_PASSWORD=
+POSTGRES_DATABASE=
+SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+POSTGRES_URL_NON_POOLING=
    ```
 
    **⚠️ 重要提示：** 
@@ -117,15 +144,8 @@ yarn dev
 
 您应该会看到 AI 助手界面已准备就绪！
 
-## 🔑 获取您的 OpenAI API 密钥
 
-1. 前往 [OpenAI 平台](https://platform.openai.com/)
-2. 登录或创建账户
-3. 导航到 [API 密钥](https://platform.openai.com/api-keys)
-4. 点击"创建新的密钥"
-5. 复制密钥并粘贴到您的 `.env.local` 文件中
 
-**注意：** OpenAI API 是按使用量付费的。请确保在您的 OpenAI 账户中设置了计费。
 
 ## 项目结构
 
@@ -184,14 +204,6 @@ pnpm lint
 
 ### 自定义设置
 
-1. 点击页头的"设置"按钮
-2. 调整以下选项：
-   - **模型**：在 GPT-3.5 Turbo、GPT-4 或 GPT-4 Turbo 之间选择
-   - **温度**：控制响应创造性（0 = 保守，1 = 创造性）
-   - **最大令牌数**：设置最大响应长度（100-4000）
-   - **助手名称**：自定义 AI 助手的名称
-   - **助手角色**：定义助手的角色/人设
-   - **特质**：添加个性特质（逗号分隔）
 3. 点击"保存设置"应用更改
 
 ### 清除聊天
@@ -239,11 +251,6 @@ pnpm lint
    - 导入您的 GitHub 仓库
    - Vercel 会自动检测这是一个 Next.js 项目
 
-3. **配置环境变量：**
-   - 在 Vercel 仪表板中，前往项目设置
-   - 导航到"环境变量"
-   - 添加：`OPENAI_API_KEY` 和您的 OpenAI API 密钥
-   - 为所有环境设置（生产、预览、开发）
 
 4. **部署：**
    - 点击"部署"
@@ -278,14 +285,6 @@ pnpm lint
 - **性能**：只重新渲染使用已更改原子的组件
 - **简单**：与其他状态管理解决方案相比样板代码最少
 
-## API 费用
-
-请注意，使用 OpenAI API 会产生费用：
-- **GPT-3.5 Turbo**：约 $0.0015 每 1K 令牌
-- **GPT-4**：约 $0.03 每 1K 令牌  
-- **GPT-4 Turbo**：约 $0.01 每 1K 令牌
-
-在 [OpenAI 仪表板](https://platform.openai.com/usage)中监控您的使用情况。
 
 ## 贡献
 
