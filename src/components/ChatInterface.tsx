@@ -7,6 +7,7 @@ import { Send, Trash2, Bot, User, Settings, Menu, MessageSquare } from 'lucide-r
 import { messagesAtom, inputAtom, isLoadingAtom, clearChatAtom, agentPersonalityAtom } from '@/store/atoms';
 import SettingsPanel from './SettingsPanel';
 import ChatSidebar from './ChatSidebar';
+import MessageContent from './MessageContent';
 
 export default function ChatInterface() {
   const [messages, setMessages] = useAtom(messagesAtom);
@@ -220,7 +221,10 @@ export default function ChatInterface() {
                         : 'bg-gray-100 text-gray-800 mr-12'
                     }`}
                   >
-                    <div className="whitespace-pre-wrap">{message.content}</div>
+                    <MessageContent 
+                      content={message.content} 
+                      role={message.role}
+                    />
                   </div>
                 </div>
               ))
