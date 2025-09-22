@@ -7,7 +7,7 @@ import { Copy, Check } from 'lucide-react';
 
 interface MessageContentProps {
   content: string;
-  role: 'user' | 'assistant' | 'system';
+  role: 'user' | 'assistant' | 'system' |  'data';
 }
 
 export default function MessageContent({ content, role }: MessageContentProps) {
@@ -35,13 +35,13 @@ export default function MessageContent({ content, role }: MessageContentProps) {
         remarkPlugins={[remarkGfm]}
         components={{
           // 代码块组件
-          code({ node, inline, className, children, ...props }) {
+          code({ node, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
             const language = match ? match[1] : '';
             const codeString = String(children).replace(/\n$/, '');
             const codeId = `code-${Math.random().toString(36).substr(2, 9)}`;
 
-            if (!inline && codeString.length > 0) {
+            if (codeString.length > 0) {
               return (
                 <div className="relative group my-4">
                   <div className="flex items-center justify-between bg-gray-800 text-gray-200 px-4 py-2 text-sm rounded-t-lg">
