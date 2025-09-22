@@ -1,4 +1,5 @@
-import { openai } from '@ai-sdk/openai';
+
+import { deepseek } from '@ai-sdk/deepseek';
 import { streamText } from 'ai';
 
 // Allow streaming responses up to 30 seconds
@@ -8,10 +9,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = await streamText({
-    model: openai('deepseek-chat', {
-      baseURL: 'https://api.deepseek.com/v1',
-      apiKey: process.env.DEEPSEEK_API_KEY,
-    }),
+    model: deepseek('deepseek-chat'),
     messages,
     system: `You are a helpful AI assistant powered by DeepSeek. You can help users with various tasks including:
     - Answering questions
