@@ -6,7 +6,7 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 导航栏 */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-4 lg:hidden">
         <Link 
           href="/" 
           className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
@@ -17,7 +17,7 @@ export default function ChatPage() {
       </div>
       
       {/* 聊天界面 */}
-      <main className="min-h-screen bg-gray-50">
+      <main className="h-screen bg-gray-50">
         <ChatInterface />
       </main>
     </div>
