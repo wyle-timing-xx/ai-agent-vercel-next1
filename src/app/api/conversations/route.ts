@@ -10,14 +10,12 @@ export async function GET(request: NextRequest) {
 
     const conversations = await chatService.getConversations(userId, limit);
     
-    return Response.json({
-      success: true,
-      data: conversations
-    });
+    // 直接返回对话数组，保持简单的API响应格式
+    return Response.json(conversations);
   } catch (error) {
     console.error('获取对话列表失败:', error);
     return Response.json(
-      { success: false, error: '获取对话列表失败' },
+      { error: '获取对话列表失败' },
       { status: 500 }
     );
   }
@@ -32,19 +30,16 @@ export async function POST(request: NextRequest) {
     
     if (!conversation) {
       return Response.json(
-        { success: false, error: '创建对话失败' },
+        { error: '创建对话失败' },
         { status: 500 }
       );
     }
 
-    return Response.json({
-      success: true,
-      data: conversation
-    });
+    return Response.json(conversation);
   } catch (error) {
     console.error('创建对话失败:', error);
     return Response.json(
-      { success: false, error: '创建对话失败' },
+      { error: '创建对话失败' },
       { status: 500 }
     );
   }
