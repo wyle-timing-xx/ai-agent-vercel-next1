@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Plus, Search, Trash2, Edit2, Check, X } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
 
 interface Conversation {
   id: number;
@@ -128,13 +126,30 @@ export default function ChatSidebar({
     }
   }, [isOpen]);
 
-  // 格式化时间
+  // 格式化时间 - 简单的相对时间函数
   const formatTime = (dateString: string) => {
     try {
-      return formatDistanceToNow(new Date(dateString), { 
-        addSuffix: true, 
-        locale: zhCN 
-      });
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+      
+      if (diffInMinutes < 1) return '刚刚';
+      if (diffInMinutes < 60) return `${diffInMinutes}分钟前`;
+      
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      if (diffInHours < 24) return `${diffInHours}小时前`;
+      
+      const diffInDays = Math.floor(diffInHours / 24);
+      if (diffInDays < 7) return `${diffInDays}天前`;
+      
+      const diffInWeeks = Math.floor(diffInDays / 7);
+      if (diffInWeeks < 4) return `${diffInWeeks}周前`;
+      
+      const diffInMonths = Math.floor(diffInDays / 30);
+      if (diffInMonths < 12) return `${diffInMonths}个月前`;
+      
+      const diffInYears = Math.floor(diffInDays / 365);
+      return `${diffInYears}年前`;
     } catch {
       return '未知时间';
     }
