@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Plus, Search, Trash2, Edit2, Check, X } from 'lucide-react';
+import dayjs from 'dayjs'
 
 interface Conversation {
   id: number;
@@ -129,7 +130,10 @@ export default function ChatSidebar({
   // 格式化时间 - 简单的相对时间函数
   const formatTime = (dateString: string) => {
     try {
+      console.log(dateString);
+      
       const date = new Date(dateString);
+      const ddate = dayjs(dateString)
       const now = new Date();
       const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
       
@@ -265,7 +269,7 @@ export default function ChatSidebar({
                           {conversation.title}
                         </h3>
                         <p className="text-xs text-gray-500 mt-1">
-                          {formatTime(conversation.updated_at)}
+                          {formatTime(conversation.created_at)}
                         </p>
                       </>
                     )}

@@ -169,7 +169,7 @@ export class ChatService {
     try {
       const { error } = await this.supabase
         .from('conversations')
-        .update({ title })
+        .update({ title, updated_at: new Date() })
         .eq('id', conversationId)
 
       if (error) {
